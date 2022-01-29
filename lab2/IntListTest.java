@@ -38,14 +38,18 @@ public class IntListTest {
      *  can be instantiated, for example, with
      *  IntList empty = IntList.list().
      */
-    
+
     @Test
     public void testSquareListRecursive() {
         // TODO: test for correctness
+        IntList testList1 = IntList.list(1, 2, 3);
+        IntList squaredIntList = IntList.squareListRecursive(testList1);
+        assertEquals(IntList.list(1, 4, 9), squaredIntList);
         // TODO: test for non-destructiveness
-        
-        // TODO: remove the placeholder line below
-        assertTrue(false);
+        IntList testList2 = IntList.list(1, 2, 3);
+        IntList.squareListRecursive(testList2);
+        assertEquals(IntList.list(1, 2, 3), testList2);
+
     }
 
     /* Run the unit tests in this file. */
