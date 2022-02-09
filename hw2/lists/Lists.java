@@ -31,9 +31,14 @@ class Lists {
         result.head = L;
         while (L.tail != null) {
             if (L.head > L.tail.head) {
-                // FIXME: Do something
+                IntList tempL = L.tail;
+                L.tail = null;
+                L = tempL;
+                result.tail = new IntListList();
+                result.tail.head = L;
+                result = result.tail; /* result now points to its tail */
             } else {
-                // FIXME: Do something else
+                L = L.tail;
             }
         }
         return resultPointer;
@@ -49,12 +54,11 @@ class Lists {
         if (L == null) {
             return null; // Should you replace me?
         } else {
-            // FIXME: Add some lines here...
-            //
-            //
-            // return new IntListList(L, rest); <- You might want this return statement...
-            //                                    but how should you define "rest"?
-            return null; // FIXME: REPLACE ME!
+            IntList endOfRun = endOfRun(L);
+            IntList nextRun = endOfRun.tail;
+            L.tail = null;
+            IntListList rest = naturalRunsRecursive(nextRun);
+            return new IntListList(L, rest); /*<- You might want this return statement...*/
         }
     }
 
