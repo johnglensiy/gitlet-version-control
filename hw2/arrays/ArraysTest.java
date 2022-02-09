@@ -21,6 +21,16 @@ public class ArraysTest {
                 Arrays.catenate(nullArray, array1));
     }
 
+    @Test
+    public void removeTest() {
+        int[] nullArray = {};
+        int[] array1 = {1, 2, 3};
+        int[] array2 = {4, 5};
+        int[] array3 = {1, 2, 3, 4, 5};
+        assertArrayEquals(new int[] {3, 4, 5},
+                Arrays.remove(array3, 0, 2));
+    }
+
     public static void main(String[] args) {
         System.exit(ucb.junit.textui.runClasses(ArraysTest.class));
     }

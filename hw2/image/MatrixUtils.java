@@ -62,7 +62,7 @@ public class MatrixUtils {
                 double best = Double.POSITIVE_INFINITY;
                 for (int deltaC = -1; deltaC <= 1; deltaC += 1) {
                     if (get(m, r - 1, c + deltaC) < best) {
-                        // FIXME: Replace this line.
+                        best = m[r][c];
                     }
                 }
                 m[r][c] += best;
@@ -95,7 +95,23 @@ public class MatrixUtils {
      */
 
     public static double[][] accumulate(double[][] m, Orientation orientation) {
-        return null; //your code here
+        if (orientation == Orientation.HORIZONTAL) {
+            double[][] acc = accumulateVertical(MatrixUtils.transpose(m));
+            return MatrixUtils.transpose(acc);
+        }
+        else {
+            return accumulateVertical(m);
+        }
+    }
+
+    private static double[][] transpose(double[][] array) {
+        double[][] arrayTranspose = new double[array[0].length][array.length];
+        for(int i = 0; i < array.length; i++) {
+            for(int j = 0; j < array[0].length; j++) {
+                arrayTranspose[i][j] = array[j][i];
+            }
+        }
+        return arrayTranspose;
     }
 
     /** Gets entry of M, unless R or C are out of bounds, then
