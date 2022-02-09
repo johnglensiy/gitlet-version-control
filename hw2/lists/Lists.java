@@ -30,7 +30,7 @@ class Lists {
         IntListList resultPointer = result;
         result.head = L;
         while (L.tail != null) {
-            if (L.head > L.tail.head) {
+            if (L.head >= L.tail.head) {
                 IntList tempL = L.tail;
                 L.tail = null;
                 L = tempL;

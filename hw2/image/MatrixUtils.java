@@ -62,7 +62,7 @@ public class MatrixUtils {
                 double best = Double.POSITIVE_INFINITY;
                 for (int deltaC = -1; deltaC <= 1; deltaC += 1) {
                     if (get(m, r - 1, c + deltaC) < best) {
-                        best = m[r][c];
+                        best = m[r-1][c];
                     }
                 }
                 m[r][c] += best;
