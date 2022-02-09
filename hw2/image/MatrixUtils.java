@@ -55,14 +55,14 @@ public class MatrixUtils {
      */
 
     public static double[][] accumulateVertical(double[][] m) {
-        m = copy(m);
+        m = MatrixUtils.copy(m);
 
         for (int r = 1; r < m.length; r++) {
             for (int c = 0; c < m[0].length; c++) {
                 double best = Double.POSITIVE_INFINITY;
                 for (int deltaC = -1; deltaC <= 1; deltaC += 1) {
                     if (get(m, r - 1, c + deltaC) < best) {
-                        best = m[r-1][c];
+                        best = m[r][c];
                     }
                 }
                 m[r][c] += best;
