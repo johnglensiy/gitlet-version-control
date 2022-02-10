@@ -16,7 +16,7 @@ public class PieceTests {
     public Timeout methodTimeout = Timeout.seconds(1);
 
     /** Check that the cells of M are as indicated by EXPECTED, which must be
-     *  a string of sequences of asterisks (occupied) and dots (unoccupuied)
+     *  a string of sequences of asterisks (occupied) and dots (unoccupied)
      *  separated by whitespace. Each sequence represents a row, starting at
      *  row 0. */
     private void checkCells(String expected, Model m) {

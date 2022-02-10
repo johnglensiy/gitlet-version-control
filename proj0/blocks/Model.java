@@ -15,7 +15,7 @@ import static blocks.Utils.*;
  *  determining whether a puzzle piece may be added at a given position or
  *  anywhere, and undoing or redoing moves.
  *
- *  @author
+ *  @ John Glen Siy
  */
 class Model {
 
@@ -29,7 +29,8 @@ class Model {
         _height = height;
         _width = width;
         _cells = new boolean[_height][_width];
-        // FIXME
+        _score = 0;
+        _streakLength = 0;
         _current = _lastHistory = -1;
     }
 
@@ -39,7 +40,8 @@ class Model {
         _width = model.width(); _height = model.height();
         _cells = new boolean[_height][_width];
         deepCopy(model._cells, _cells);
-        // FIXME
+        _score = model._score;
+        _streakLength = model._streakLength;
         _current = model._current;
         _lastHistory = model._lastHistory;
         for (GameState g : model._history.subList(0, model._lastHistory + 1)) {
@@ -76,16 +78,30 @@ class Model {
     /** Return true iff PIECE may be added to the board with its
      *  reference point at (ROW, COL). False if PIECE == null. */
     boolean placeable(Piece piece, int row, int col) {
+        int pieceWidth = piece.width();
+        int pieceHeight = piece.height();
         if (piece == null) {
             return false;
         }
-        // FIXME
+        for (int i = 0; i < pieceHeight; i++) {
+            for (int j = 0; j < pieceWidth; j++) {
+                if (piece.get(i, j) && get(row + i, col + j)) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 
     /** Return true iff PIECE may be added to the board at some position. */
     boolean placeable(Piece piece) {
-        // FIXME
+        for (int i = 0; i < _height; i++) {
+            for (int j = 0; j < _width; j++) {
+                if (placeable(piece, i, j)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -204,7 +220,7 @@ class Model {
      *  or is currently filled.   That is, it returns true iff one may not
      *  add a Piece that would fill location (ROW, COL). */
     boolean get(int row, int col) {
-        return true; // FIXME
+        return _cells[row][col];
     }
 
     @Override
