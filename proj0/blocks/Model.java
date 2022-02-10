@@ -120,7 +120,7 @@ class Model {
      *  there. Also updates score(). */
     void place(Piece piece, int row, int col) {
         assert placeable(piece, row, col);
-        // FIXME
+
     }
 
     /** Place piece(K) on the board at (ROW, COL), assuming it is placeable
@@ -220,6 +220,9 @@ class Model {
      *  or is currently filled.   That is, it returns true iff one may not
      *  add a Piece that would fill location (ROW, COL). */
     boolean get(int row, int col) {
+        if (row >= _height || row < 0 || col >= _width || col < 0) {
+            return true;
+        }
         return _cells[row][col];
     }
 
