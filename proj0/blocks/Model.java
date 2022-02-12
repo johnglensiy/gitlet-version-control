@@ -29,6 +29,7 @@ class Model {
         _height = height;
         _width = width;
         _cells = new boolean[_height][_width];
+        _hand = new ArrayList<Piece>();
         _score = 0;
         _streakLength = 0;
         _current = _lastHistory = -1;
@@ -41,6 +42,7 @@ class Model {
         _cells = new boolean[_height][_width];
         deepCopy(model._cells, _cells);
         _score = model._score;
+        _hand = model._hand;
         _streakLength = model._streakLength;
         _current = model._current;
         _lastHistory = model._lastHistory;
@@ -62,7 +64,7 @@ class Model {
     /** Returns the number of pieces dealt to the hand since this Model
      *  was created or the hand was last cleared. */
     int handSize() {
-        return 0; // FIXME
+        return _hand.size();
     }
 
     /** Return piece #K (numbering from 0) in the current hand. Returns
@@ -72,7 +74,8 @@ class Model {
         if (k < 0 || k >= _hand.size()) {
             return null;
         }
-        return null; // FIXME
+        Piece kPointer = _hand.get(k);
+        return kPointer;
     }
 
     /** Return true iff PIECE may be added to the board with its
@@ -119,8 +122,17 @@ class Model {
     /** Place PIECE on the board at (ROW, COL), assuming it is placeable
      *  there. Also updates score(). */
     void place(Piece piece, int row, int col) {
+        int pieceHeight = piece.height();
+        int pieceWidth = piece.width();
         assert placeable(piece, row, col);
-
+        for (int i = 0; i < pieceHeight; i++) {
+            for (int j = 0; j < pieceWidth; j++) {
+                if (piece.get(i, j)) {
+                    _cells[row + i][col + j] = true;
+                    _score++;
+                }
+            }
+        }
     }
 
     /** Place piece(K) on the board at (ROW, COL), assuming it is placeable
@@ -128,7 +140,7 @@ class Model {
      *  the hand). Also updates score(). */
     void place(int k, int row, int col) {
         place(piece(k), row, col);
-        // FIXME
+        _hand.set(k, null);
     }
 
     /** Return an array COUNTS such that COUNTS[0][r] is the number of
@@ -136,7 +148,14 @@ class Model {
      *  filled grid cells in column c. */
     int[][] rowColumnCounts() {
         int[][] result = new int[][] { new int[_height], new int[_width] };
-        // FIXME
+        for (int i = 0; i < _height; i++) {
+            for (int j = 0; j < _width; j++) {
+                if (get(i, j)) {
+                    result[0][i]++;
+                    result[1][j]++;
+                }
+            }
+        }
         return result;
     }
 
@@ -146,7 +165,30 @@ class Model {
         int nrows, ncols;
         int[][] counts = rowColumnCounts();
         nrows = ncols = 0;
-        // FIXME
+        for (int i = 0; i < _height; i++) {
+            if (counts[0][i] == _width) { // if row is completely filled
+                nrows++;
+                for (int k = 0; k < _width; k++) {
+                    _cells[i][k] = false;
+                    //_score++;
+                }
+            }
+        }
+        for (int j = 0; j < _width; j++) {
+            if (counts[1][j] == _height) { // if col is completely filled
+                ncols++;
+                for (int l = 0; l < _height; l++) {
+                    _cells[l][j] = false;
+                    //_score++;
+                }
+            }
+        }
+        if (nrows > 0 || ncols > 0) {
+            _streakLength++;
+        }
+        else {
+            _streakLength = 0;
+        }
         _score += scoreClearedLines(nrows, ncols);
     }
 
@@ -154,24 +196,33 @@ class Model {
      *  NROWS is the number of rows cleared and NCOLS is the number
      *  of columns cleared. */
     private int scoreClearedLines(int nrows, int ncols) {
-        return 0; // FIXME
+        int streak = (((ncols * _width) + (nrows * _height))
+                * _streakLength);
+        int ind = (nrows * _height) + (ncols * _width) - (nrows * ncols);
+
+        return streak + ind;
     }
 
     /** Return true iff the current hand is empty (i.e., piece(k) is null
      *  for all k). */
     boolean handUsed() {
-        // FIXME
+        for (Piece k : _hand) {
+            if (k != null) {
+                return false;
+            }
+        }
         return true;
     }
 
     /** Empty all Pieces from the current hand. */
     void clearHand() {
-        // FIXME
+        _hand.clear();
     }
+
 
     /** Add PIECE to the current hand.  Assumes PIECE is not null. */
     void deal(Piece piece) {
-        // FIXME
+        _hand.add(piece);
     }
 
     /** Return current score. */
@@ -193,7 +244,8 @@ class Model {
      *  Does nothing if at the initial board. */
     void undo() {
         if (_current > 0) {
-            return; // FIXME
+            _current--;
+            _history.get(_current).restoreState();
         }
     }
 
@@ -201,14 +253,20 @@ class Model {
      *  there are no available undone boards. */
     void redo() {
         if (_current < _lastHistory) {
-            return; // FIXME
+            _current++;
+            _history.get(_current).restoreState();
         }
     }
 
     /** Returns true if this puzzle round is over because the hand is not empty
      *  but contains only Pieces that cannot be placed.  */
     boolean roundOver() {
-        return true; // FIXME
+        for (Piece k : _hand) {
+            if (placeable(k)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Returns true iff (ROW, COL) is a valid cell location. */
