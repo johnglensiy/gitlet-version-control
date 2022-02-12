@@ -5,7 +5,7 @@ import java.util.Random;
 import static blocks.Utils.*;
 
 /** A creator of random Blocks puzzles.
- *  @author
+ *  @ John Glen Siy
  */
 class PuzzleGenerator implements PuzzleSource {
 
@@ -22,7 +22,7 @@ class PuzzleGenerator implements PuzzleSource {
         assert handSize > 0;
         model.clearHand();
         for (int i = 0; i < handSize; i++) {
-            model.deal(PIECES[_random.nextInt(0 , PIECES.length - 1)]);
+            model.deal(PIECES[_random.nextInt(0, PIECES.length - 1)]);
         }
         return true;
     }

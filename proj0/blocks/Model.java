@@ -81,11 +81,11 @@ class Model {
     /** Return true iff PIECE may be added to the board with its
      *  reference point at (ROW, COL). False if PIECE == null. */
     boolean placeable(Piece piece, int row, int col) {
-        int pieceWidth = piece.width();
-        int pieceHeight = piece.height();
         if (piece == null) {
             return false;
         }
+        int pieceWidth = piece.width();
+        int pieceHeight = piece.height();
         for (int i = 0; i < pieceHeight; i++) {
             for (int j = 0; j < pieceWidth; j++) {
                 if (piece.get(i, j) && get(row + i, col + j)) {
@@ -185,8 +185,7 @@ class Model {
         }
         if (nrows > 0 || ncols > 0) {
             _streakLength++;
-        }
-        else {
+        } else {
             _streakLength = 0;
         }
         _score += scoreClearedLines(nrows, ncols);
@@ -262,8 +261,10 @@ class Model {
      *  but contains only Pieces that cannot be placed.  */
     boolean roundOver() {
         for (Piece k : _hand) {
-            if (placeable(k)) {
-                return false;
+            if (k != null) {
+                if (placeable(k)) {
+                    return false;
+                }
             }
         }
         return true;
