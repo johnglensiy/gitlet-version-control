@@ -20,7 +20,7 @@ public class GreaterThanFilter extends TableFilter {
         return false;
     }
 
-    String _colName, _ref;
+    private String _colName, _ref;
 
-    int _colNameIndex;
+    private int _colNameIndex;
 }
