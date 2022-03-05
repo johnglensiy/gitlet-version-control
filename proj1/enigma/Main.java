@@ -86,18 +86,18 @@ public final class Main {
      *  results to _output. */
     private void process() {
         Machine mach = readConfig();
-        String nextLine = _input.nextLine();
         while (_input.hasNext()) {
-            setUp(mach, nextLine);
-            nextLine = _input.nextLine();
-            while (!nextLine.contains("*")) {
+            String nextLine = _input.nextLine();
+            if (nextLine.charAt(0) == '*') {
+                setUp(mach, nextLine);
+            }
+            else {
                 String parsedLine = mach.convert(nextLine.replaceAll(" ", ""));
                 if (nextLine.isEmpty()) {
                     _output.println();
                 } else {
                     printMessageLine(parsedLine);
                 }
-                nextLine = _input.nextLine();
             }
         }
     }
@@ -123,7 +123,10 @@ public final class Main {
         try {
             String name = _config.next();
             String rotorType = _config.next();
-            String perm = _config.nextLine();
+            String perm = "";
+            while (_config.hasNext("\\([\\p{ASCII}&&[^*()]]+\\)")) {
+                perm += _config.next() + " ";
+            }
             if (rotorType.charAt(0) == 'M') {
                 return new MovingRotor(name, new Permutation(perm, _alphabet), rotorType.substring(1));
             } else if (rotorType.charAt(0) == 'N') {

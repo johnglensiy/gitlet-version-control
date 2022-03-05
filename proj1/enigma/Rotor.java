@@ -63,20 +63,22 @@ class Rotor {
      *  according to my permutation. */
     int convertForward(int p) {
         int result = _permutation.permute(p + setting());
+        result = _permutation.wrap(result - setting());
         if (Main.verbose()) {
             System.err.printf("%c -> ", alphabet().toChar(result));
         }
-        return _permutation.wrap(result - setting());
+        return result;
     }
 
     /** Return the conversion of E (an integer in the range 0..size()-1)
      *  according to the inverse of my permutation. */
     int convertBackward(int e) {
         int result = _permutation.invert(e + setting());
+        result = _permutation.wrap(result - setting());
         if (Main.verbose()) {
             System.err.printf("%c -> ", alphabet().toChar(result));
         }
-        return _permutation.wrap(result - setting());
+        return result;
     }
 
     /** Returns the positions of the notches, as a string giving the letters
