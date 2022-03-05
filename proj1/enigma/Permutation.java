@@ -2,7 +2,6 @@ package enigma;
 
 import static enigma.EnigmaException.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /** Represents a permutation of a range of integers starting at 0 corresponding
  *  to the characters of an alphabet.
@@ -108,8 +107,7 @@ class Permutation {
     /** Return true iff this permutation is a derangement (i.e., a
      *  permutation for which no value maps to itself). */
     boolean derangement() {
-        ArrayList<Boolean> isDeranged = 
-                new ArrayList<Boolean>(_alphabet.size());
+        ArrayList<Boolean> isDeranged = new ArrayList<>(_alphabet.size());
         for (Boolean b : isDeranged) {
             b = false;
         }

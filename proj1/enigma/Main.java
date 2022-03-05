@@ -183,6 +183,7 @@ public final class Main {
     /** Alphabet used in this machine. */
     private Alphabet _alphabet;
 
+    /** configRotors. **/
     private ArrayList<Rotor> _configRotors = new ArrayList<Rotor>();
 
     /** Source of input messages. */
