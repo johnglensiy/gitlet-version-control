@@ -154,7 +154,7 @@ public final class Main {
             tracker++;
         }
         M.insertRotors(rotors);
-        M.setRotors(setArgs[M.numRotors() + 1]);
+        M.setRotors(setArgs[M.numRotors()]);
         tracker++;
         String perm = "";
         for (int i = tracker + 1; i < setArgs.length; i++) {
