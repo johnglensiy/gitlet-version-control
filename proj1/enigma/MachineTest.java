@@ -7,7 +7,7 @@ import org.junit.rules.Timeout;
 import static org.junit.Assert.*;
 
 /** The suite of all JUnit tests for the Machine class.
- *  @author
+ *  @author John Glen Siy
  */
 public class MachineTest {
 

@@ -2,6 +2,7 @@ package enigma;
 
 import static enigma.EnigmaException.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Represents a permutation of a range of integers starting at 0 corresponding
  *  to the characters of an alphabet.
@@ -60,7 +61,12 @@ class Permutation {
             int cLength = cycle.length();
             for (int i = 0; i < cLength; i++) {
                 if (cycle.charAt(i) == p) {
-                    return cycle.charAt((i + 1) % cLength);
+                    if (i != cycle.length() - 1) {
+                        return cycle.charAt(i + 1);
+                    }
+                    else {
+                        return cycle.charAt(0);
+                    }
                 }
             }
         }
@@ -73,7 +79,12 @@ class Permutation {
             int cLength = cycle.length();
             for (int i = 0; i < cLength; i++) {
                 if (cycle.charAt(i) == c) {
-                    return cycle.charAt((i - 1) % cLength);
+                    if (i != 0) {
+                        return cycle.charAt(i - 1);
+                    }
+                    else {
+                        return cycle.charAt(cycle.length() - 1);
+                    }
                 }
             }
         }
@@ -83,13 +94,13 @@ class Permutation {
     /** Return the result of applying this permutation to P modulo the
      *  alphabet size. */
     int permute(int p) {
-        return permute(_alphabet.toChar(p));
+        return _alphabet.toInt(permute(_alphabet.toChar(wrap(p))));
     }
 
     /** Return the result of applying the inverse of this permutation
      *  to  C modulo the alphabet size. */
     int invert(int c) {
-        return permute(_alphabet.toChar(c));
+        return _alphabet.toInt(invert(_alphabet.toChar(wrap(c))));
     }
 
     /** Return the alphabet used to initialize this Permutation. */
@@ -100,7 +111,19 @@ class Permutation {
     /** Return true iff this permutation is a derangement (i.e., a
      *  permutation for which no value maps to itself). */
     boolean derangement() {
-        return true;  // FIXME
+        ArrayList<Boolean> isDeranged = new ArrayList<Boolean>(_alphabet.size());
+        for (Boolean b : isDeranged) {
+            b = false;
+        }
+        for (int i = 0; i < _alphabet.size(); i++) {
+            for (String cycle : _cycles) {
+                if (cycle.contains(
+                        Character.toString(_alphabet.toChar(i)))) {
+                    isDeranged.set(i, true);
+                }
+            }
+        }
+        return isDeranged.contains(false);
     }
 
     /** Alphabet of this permutation. */
@@ -108,5 +131,4 @@ class Permutation {
 
     private ArrayList<String> _cycles;
 
-    // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
 }

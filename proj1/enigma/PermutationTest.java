@@ -51,4 +51,10 @@ public class PermutationTest {
         checkPerm("identity", UPPER_STRING, UPPER_STRING);
     }
 
+    @Test
+    public void checkCharPermute() {
+        perm = new Permutation("(ABCD)", UPPER);
+        assertEquals('B', perm.invert('C'));
+    }
+
 }
