@@ -105,6 +105,9 @@ class Machine {
     /** Advance all rotors to their next position. */
     private void advanceRotors() {
         for (int i = 1; i < _numRotors; i++) {
+            if (_rotorSet[i + 1] == null) {
+                throw error("Empty rotor");
+            }
             boolean isLast = (i == _numRotors - 1);
             if (isLast || _rotorSet[i + 1].atNotch()) {
                 _rotorSet[i].advance();
