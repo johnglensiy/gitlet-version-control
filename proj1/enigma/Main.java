@@ -155,6 +155,9 @@ public final class Main {
         }
         M.insertRotors(rotors);
         tracker++;
+        if (tracker >= setArgs.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         M.setRotors(setArgs[tracker]);
         String perm = "";
         for (int i = tracker + 1; i < setArgs.length; i++) {
