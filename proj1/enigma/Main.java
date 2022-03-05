@@ -14,7 +14,7 @@ import ucb.util.CommandArgs;
 import static enigma.EnigmaException.*;
 
 /** Enigma simulator.
- *  @author
+ *  @author John Glen Siy
  */
 public final class Main {
 
@@ -85,16 +85,32 @@ public final class Main {
      *  file _config and apply it to the messages in _input, sending the
      *  results to _output. */
     private void process() {
-        // FIXME
+        while (_input.hasNext()) {
+            Machine mach = readConfig();
+            String setting = _input.nextLine();
+            setUp(mach, setting);
+            String nextLine = _input.nextLine();
+            String parsedLine = mach.convert(nextLine.replaceAll(" ", ""));
+            if (nextLine.isEmpty()) {
+                _output.println();
+            }
+            else {
+                printMessageLine(parsedLine);
+            }
+        }
     }
 
     /** Return an Enigma machine configured from the contents of configuration
      *  file _config. */
     private Machine readConfig() {
         try {
-            // FIXME
-            _alphabet = new Alphabet();
-            return new Machine(_alphabet, 2, 1, null);
+            _alphabet = new Alphabet(_config.next());
+            int numRotors = _config.nextInt();
+            int pawls = _config.nextInt();
+            while (_config.hasNextLine()) {
+                _configRotors.add(readRotor());
+            }
+            return new Machine(_alphabet, numRotors, pawls, _configRotors);
         } catch (NoSuchElementException excp) {
             throw error("configuration file truncated");
         }
@@ -103,7 +119,16 @@ public final class Main {
     /** Return a rotor, reading its description from _config. */
     private Rotor readRotor() {
         try {
-            return null; // FIXME
+            String name = _config.next();
+            String rotorType = _config.next();
+            String perm = _config.nextLine();
+            if (rotorType.charAt(0) == 'M') {
+                return new MovingRotor(name, new Permutation(perm, _alphabet), rotorType.substring(1));
+            } else if (rotorType.charAt(0) == 'N') {
+                return new FixedRotor(name, new Permutation(perm, _alphabet));
+            } else {
+                return new Reflector(name, new Permutation(perm, _alphabet));
+            }
         } catch (NoSuchElementException excp) {
             throw error("bad rotor description");
         }
@@ -112,7 +137,24 @@ public final class Main {
     /** Set M according to the specification given on SETTINGS,
      *  which must have the format specified in the assignment. */
     private void setUp(Machine M, String settings) {
-        // FIXME
+        String[] setArgs = settings.split(" ");
+        String[] rotors = new String[M.numRotors()];
+        int tracker = 0;
+        if (setArgs.length - 1 < M.numRotors()) {
+            throw new EnigmaException("Not enough rotor arguments");
+        }
+        for (int i = 1; i < M.numRotors() + 1; i++) {
+            rotors[i - 1] = setArgs[i];
+            tracker++;
+        }
+        M.insertRotors(rotors);
+        M.setRotors(setArgs[M.numRotors() + 1]);
+        tracker++;
+        String perm = "";
+        for (int i = tracker + 1; i < setArgs.length; i++) {
+            perm = perm.concat(setArgs[i] + " ");
+        }
+        M.setPlugboard(new Permutation(perm, _alphabet));
     }
 
     /** Return true iff verbose option specified. */
@@ -123,11 +165,20 @@ public final class Main {
     /** Print MSG in groups of five (except that the last group may
      *  have fewer letters). */
     private void printMessageLine(String msg) {
-        // FIXME
+        for (int i = 0; i < msg.length(); i += 5) {
+            int rest = msg.length() - i;
+            if (rest <= 5) {
+                _output.println(msg.substring(i, i + rest));
+            } else {
+                _output.print(msg.substring(i, i + 5) + " ");
+            }
+        }
     }
 
     /** Alphabet used in this machine. */
     private Alphabet _alphabet;
+
+    private ArrayList<Rotor> _configRotors = new ArrayList<Rotor>();
 
     /** Source of input messages. */
     private Scanner _input;
