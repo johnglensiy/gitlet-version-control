@@ -85,17 +85,19 @@ public final class Main {
      *  file _config and apply it to the messages in _input, sending the
      *  results to _output. */
     private void process() {
+        Machine mach = readConfig();
+        String nextLine = _input.nextLine();
         while (_input.hasNext()) {
-            Machine mach = readConfig();
-            String setting = _input.nextLine();
-            setUp(mach, setting);
-            String nextLine = _input.nextLine();
-            String parsedLine = mach.convert(nextLine.replaceAll(" ", ""));
-            if (nextLine.isEmpty()) {
-                _output.println();
-            }
-            else {
-                printMessageLine(parsedLine);
+            setUp(mach, nextLine);
+            nextLine = _input.nextLine();
+            while (!nextLine.contains("*")) {
+                String parsedLine = mach.convert(nextLine.replaceAll(" ", ""));
+                if (nextLine.isEmpty()) {
+                    _output.println();
+                } else {
+                    printMessageLine(parsedLine);
+                }
+                nextLine = _input.nextLine();
             }
         }
     }
@@ -107,7 +109,7 @@ public final class Main {
             _alphabet = new Alphabet(_config.next());
             int numRotors = _config.nextInt();
             int pawls = _config.nextInt();
-            while (_config.hasNextLine()) {
+            while (_config.hasNext()) {
                 _configRotors.add(readRotor());
             }
             return new Machine(_alphabet, numRotors, pawls, _configRotors);
