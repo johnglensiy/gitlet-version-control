@@ -88,7 +88,7 @@ public final class Main {
         Machine mach = readConfig();
         while (_input.hasNext()) {
             String nextLine = _input.nextLine();
-            if (nextLine.charAt(0) == '*') {
+            if (!nextLine.isEmpty() && nextLine.charAt(0) == '*') {
                 setUp(mach, nextLine);
             } else {
                 String parsedLine = mach.convert(nextLine.replaceAll(" ", ""));
