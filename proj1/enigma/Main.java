@@ -128,7 +128,8 @@ public final class Main {
             }
             if (rotorType.charAt(0) == 'M') {
                 return new MovingRotor(name,
-                        new Permutation(perm, _alphabet), rotorType.substring(1));
+                        new Permutation(perm, _alphabet),
+                        rotorType.substring(1));
             } else if (rotorType.charAt(0) == 'N') {
                 return new FixedRotor(name, new Permutation(perm, _alphabet));
             } else {

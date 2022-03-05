@@ -1,7 +1,5 @@
 package enigma;
 
-import org.jetbrains.annotations.NotNull;
-
 import static enigma.EnigmaException.*;
 import java.util.ArrayList;
 
@@ -22,7 +20,7 @@ class Permutation {
         permInit(cycles);
     }
 
-    /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
+    /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLES is
      *  c0c1...cm. */
     private void permInit(String cycles) {
         String cycleSoFar = "";
@@ -34,10 +32,6 @@ class Permutation {
                 cycleSoFar += c;
             }
         }
-    }
-
-    private void addCycle(String cycle) {
-        _cycles.add(cycle);
     }
 
     /** Return the value of P modulo the size of this permutation. */
