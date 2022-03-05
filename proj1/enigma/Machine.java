@@ -1,7 +1,5 @@
 package enigma;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Collection;
 
 import static enigma.EnigmaException.*;
@@ -49,7 +47,7 @@ class Machine {
      *  Initially, all rotors are set at their 0 setting. */
     void insertRotors(String[] rotors) {
         int i = 0;
-        for (String rName: rotors){
+        for (String rName: rotors) {
             for (Object rotor: _allRotors) {
                 Rotor rotorCast = (Rotor) rotor;
                 if (rotorCast.name().equals(rName)) {
@@ -116,28 +114,6 @@ class Machine {
                 }
             }
         }
-        //printSettings();
-        /***
-        ArrayList<Rotor> setToAdvance = new ArrayList<Rotor>();
-        for (int i = 1; i < _numRotors; i++) {
-            if (_rotorSet[i].atNotch()) {
-                if (!setToAdvance.contains(_rotorSet[i - 1])) {
-                    setToAdvance.add(_rotorSet[i - 1]);
-                }
-                setToAdvance.add(_rotorSet[i]);
-            }
-        }
-        if (!setToAdvance.contains(_rotorSet[_numRotors - 1])) {
-            setToAdvance.add(_rotorSet[_numRotors - 1]);
-        }
-        for (int i = 0; i < _numRotors; i++) {
-            if (setToAdvance.contains(_rotorSet[i])) {
-                _rotorSet[i].advance();
-            }
-            System.out.print(_rotorSet[i].setting() + " ");
-        }
-        System.out.println();
-        **/
     }
 
     private void printSettings() {
@@ -173,12 +149,16 @@ class Machine {
     /** Common alphabet of my rotors. */
     private final Alphabet _alphabet;
 
+    /** numRotors and pawls **/
     private int _numRotors, _pawls;
 
+    /** allRotors **/
     private Object[] _allRotors;
 
+    /** rotorSet **/
     private Rotor[] _rotorSet;
 
+    /** plugboard **/
     private Permutation _plugboard;
 
 }

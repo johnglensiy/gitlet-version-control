@@ -14,7 +14,9 @@ class Reflector extends FixedRotor {
     }
 
     @Override
-    boolean reflecting() { return true; }
+    boolean reflecting() {
+        return true;
+    }
 
     @Override
     void set(int posn) {
@@ -22,5 +24,4 @@ class Reflector extends FixedRotor {
             throw error("reflector has only one position");
         }
     }
-
 }
