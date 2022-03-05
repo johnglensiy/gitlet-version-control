@@ -156,7 +156,7 @@ public final class Main {
         M.insertRotors(rotors);
         tracker++;
         if (tracker >= setArgs.length) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw error("Incorrect number of arguments");
         }
         M.setRotors(setArgs[tracker]);
         String perm = "";
