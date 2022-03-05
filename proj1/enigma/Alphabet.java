@@ -39,5 +39,6 @@ class Alphabet {
         return _chars.indexOf(ch);
     }
 
+    /** chars. **/
     private String _chars;
 }

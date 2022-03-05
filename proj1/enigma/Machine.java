@@ -149,16 +149,16 @@ class Machine {
     /** Common alphabet of my rotors. */
     private final Alphabet _alphabet;
 
-    /** numRotors and pawls **/
+    /** numRotors and pawls. **/
     private int _numRotors, _pawls;
 
-    /** allRotors **/
+    /** allRotors. **/
     private Object[] _allRotors;
 
-    /** rotorSet **/
+    /** rotorSet. **/
     private Rotor[] _rotorSet;
 
-    /** plugboard **/
+    /** plugboard. **/
     private Permutation _plugboard;
 
 }

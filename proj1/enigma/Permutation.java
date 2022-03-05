@@ -29,8 +29,7 @@ class Permutation {
             if (c == ')') {
                 _cycles.add(cycleSoFar);
                 cycleSoFar = "";
-            }
-            else if (c != '(' && c != ' ') {
+            } else if (c != '(' && c != ' ') {
                 cycleSoFar += c;
             }
         }
@@ -63,8 +62,7 @@ class Permutation {
                 if (cycle.charAt(i) == p) {
                     if (i != cycle.length() - 1) {
                         return cycle.charAt(i + 1);
-                    }
-                    else {
+                    } else {
                         return cycle.charAt(0);
                     }
                 }
@@ -81,8 +79,7 @@ class Permutation {
                 if (cycle.charAt(i) == c) {
                     if (i != 0) {
                         return cycle.charAt(i - 1);
-                    }
-                    else {
+                    } else {
                         return cycle.charAt(cycle.length() - 1);
                     }
                 }
@@ -111,7 +108,8 @@ class Permutation {
     /** Return true iff this permutation is a derangement (i.e., a
      *  permutation for which no value maps to itself). */
     boolean derangement() {
-        ArrayList<Boolean> isDeranged = new ArrayList<Boolean>(_alphabet.size());
+        ArrayList<Boolean> isDeranged = 
+                new ArrayList<Boolean>(_alphabet.size());
         for (Boolean b : isDeranged) {
             b = false;
         }
@@ -129,6 +127,7 @@ class Permutation {
     /** Alphabet of this permutation. */
     private Alphabet _alphabet;
 
+    /** cycles. **/
     private ArrayList<String> _cycles;
 
 }
