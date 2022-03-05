@@ -141,7 +141,7 @@ class Machine {
     String convert(String msg) {
         String result = "";
         for (char c: msg.toCharArray()) {
-             result += alphabet().toChar(convert(alphabet().toInt(c)));
+            result += alphabet().toChar(convert(alphabet().toInt(c)));
         }
         return result;
     }
