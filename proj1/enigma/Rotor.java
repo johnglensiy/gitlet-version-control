@@ -94,7 +94,9 @@ class Rotor {
     }
 
     /** Advance me one position, if possible. By default, does nothing. */
-    void advance() {}
+    void advance() {
+        return;
+    }
 
     @Override
     public String toString() {

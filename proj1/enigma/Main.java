@@ -127,8 +127,8 @@ public final class Main {
                 perm += _config.next() + " ";
             }
             if (rotorType.charAt(0) == 'M') {
-                return new MovingRotor
-                        (name, new Permutation(perm, _alphabet), rotorType.substring(1));
+                return new MovingRotor(name,
+                        new Permutation(perm, _alphabet), rotorType.substring(1));
             } else if (rotorType.charAt(0) == 'N') {
                 return new FixedRotor(name, new Permutation(perm, _alphabet));
             } else {

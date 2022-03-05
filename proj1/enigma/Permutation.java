@@ -24,7 +24,7 @@ class Permutation {
 
     /** Add the cycle c0->c1->...->cm->c0 to the permutation, where CYCLE is
      *  c0c1...cm. */
-    private void permInit(@NotNull String cycles) {
+    private void permInit(String cycles) {
         String cycleSoFar = "";
         for (char c : cycles.toCharArray()) {
             if (c == ')') {
