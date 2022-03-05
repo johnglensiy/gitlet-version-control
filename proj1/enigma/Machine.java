@@ -116,7 +116,7 @@ class Machine {
                 }
             }
         }
-        printSettings();
+        //printSettings();
         /***
         ArrayList<Rotor> setToAdvance = new ArrayList<Rotor>();
         for (int i = 1; i < _numRotors; i++) {
