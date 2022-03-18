@@ -15,6 +15,8 @@ import java.util.function.Consumer;
 import static ataxx.PieceColor.*;
 import static ataxx.GameException.error;
 
+import static java.lang.Math.abs;
+
 /** An Ataxx board.   The squares are labeled by column (a char value between
  *  'a' - 2 and 'g' + 2) and row (a char value between '1' - 2 and '7'
  *  + 2) or by linearized index, an integer described below.  Values of
@@ -45,7 +47,7 @@ class Board {
      * This is unrelated to a move that is an "extend". */
     static final int EXTENDED_SIDE = Move.EXTENDED_SIDE;
 
-    /** Total number of squares in the board including border squares */
+    /** Total number of squares in the board including border squares. */
     static final int TOTAL_SQUARES = EXTENDED_SIDE * EXTENDED_SIDE;
 
     /** Number of consecutive non-extending moves before game ends. */
@@ -92,10 +94,10 @@ class Board {
                 unrecordedSet(index((char) (i + 'a'), (char) (j + '1')), EMPTY);
             }
         }
-        unrecordedSet(index('g', '1'), RED);
-        unrecordedSet(index('a', '1'), BLUE);
-        unrecordedSet(index('g', '7'), BLUE);
-        unrecordedSet(index('a', '7'), RED);
+        unrecordedSet('g', '1', RED);
+        unrecordedSet('a', '1', BLUE);
+        unrecordedSet('g', '7', BLUE);
+        unrecordedSet('a', '7', RED);
         announce();
     }
 
@@ -166,7 +168,15 @@ class Board {
 
     /** Return true iff MOVE is legal on the current board. */
     boolean legalMove(Move move) {
-        return true; // FIXME
+        if (move == null) {
+            return false;
+        } else if (get(index(move.col1(), move.row1())) == BLOCKED) {
+            return false;
+        } else if (get(index(move.col0(), move.row0())) != _whoseMove) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /** Return true iff C0 R0 - C1 R1 is legal on the current board. */
@@ -177,7 +187,7 @@ class Board {
     /** Return true iff player WHO can move, ignoring whether it is
      *  that player's move and whether the game is over. */
     boolean canMove(PieceColor who) {
-        return true; // FIXME
+        return true; // FIX ME
     }
 
     /** Return the color of the player who has the next move.  The
@@ -232,7 +242,7 @@ class Board {
         _allMoves.add(move);
         startUndo();
         PieceColor opponent = _whoseMove.opposite();
-        // Fix me
+        //set()
         _whoseMove = opponent;
         announce();
     }
@@ -270,7 +280,11 @@ class Board {
 
     /** Return true iff it is legal to place a block at C R. */
     boolean legalBlock(char c, char r) {
-        return true; // FIXME
+        if (get(index(c, r)) == BLOCKED | get(index(c, r)) == EMPTY) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /** Return true iff it is legal to place a block at CR. */
@@ -284,14 +298,31 @@ class Board {
      *  already occupied by a block.  It is an error to place a block on a
      *  piece. */
     void setBlock(char c, char r) {
+        double middleSquare = TOTAL_SQUARES / 2.0;
+        double distCentCol = abs(c - 'a' - (SIDE - 1) / 2.0);
+        double distCentRow = abs(r - '1' - (SIDE - 1) / 2.0);
         if (!legalBlock(c, r)) {
             throw error("illegal block placement");
         }
-        // FIXME
+        // F
         if (!canMove(RED) && !canMove(BLUE)) {
             _winner = EMPTY;
         }
-
+        if (index(c, r) == Math.floor(middleSquare) && TOTAL_SQUARES % 2 == 1) {
+            unrecordedSet(c, r, BLOCKED);
+            incrPieces(BLOCKED, 1);
+        } else {
+            unrecordedSet( (int) (middleSquare + distCentCol), BLOCKED);
+            unrecordedSet( (int) (middleSquare - distCentCol), BLOCKED);
+            unrecordedSet( (int) (middleSquare + EXTENDED_SIDE * distCentRow), BLOCKED);
+            unrecordedSet( (int) (middleSquare - EXTENDED_SIDE * distCentRow), BLOCKED);
+            for (int i = 1; i < TOTAL_SQUARES; i++) {
+                if (get(i) == BLOCKED) {
+                    System.out.println(i);
+                }
+            }
+            incrPieces(BLOCKED, 4);
+        }
         announce();
     }
 
@@ -302,7 +333,7 @@ class Board {
 
     /** Return total number of unblocked squares. */
     int totalOpen() {
-        return 0; // FIXME;
+        return TOTAL_SQUARES - _numPieces[BLOCKED.ordinal()];
     }
 
     /** Return a list of all moves made since the last clear (or start of
