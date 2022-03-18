@@ -45,12 +45,18 @@ class Board {
      * This is unrelated to a move that is an "extend". */
     static final int EXTENDED_SIDE = Move.EXTENDED_SIDE;
 
+    /** Total number of squares in the board including border squares */
+    static final int TOTAL_SQUARES = EXTENDED_SIDE * EXTENDED_SIDE;
+
     /** Number of consecutive non-extending moves before game ends. */
     static final int JUMP_LIMIT = 25;
 
     /** A new, cleared board in the initial configuration. */
     Board() {
-        _board = new PieceColor[EXTENDED_SIDE * EXTENDED_SIDE];
+        _board = new PieceColor[TOTAL_SQUARES];
+        for (int i = 0; i < TOTAL_SQUARES; i++) {
+            unrecordedSet(i, BLOCKED);
+        }
         setNotifier(NOP);
         clear();
     }
@@ -59,7 +65,6 @@ class Board {
      *  undo history is clear, and whose notifier does nothing. */
     Board(Board board0) {
         _board = board0._board.clone();
-        // FIXME
         setNotifier(NOP);
     }
 
@@ -78,7 +83,19 @@ class Board {
      *  positions and no blocks. */
     void clear() {
         _whoseMove = RED;
-        // FIXME
+        _numJumps = 0;
+        _winner = null;
+        _numPieces[RED.ordinal()] = _numPieces[BLUE.ordinal()] = 2;
+        _allMoves.clear();
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                unrecordedSet(index((char) (i + 'a'), (char) (j + '1')), EMPTY);
+            }
+        }
+        unrecordedSet(index('g', '1'), RED);
+        unrecordedSet(index('a', '1'), BLUE);
+        unrecordedSet(index('g', '7'), BLUE);
+        unrecordedSet(index('a', '7'), RED);
         announce();
     }
 
@@ -172,14 +189,14 @@ class Board {
     /** Return total number of moves and passes since the last
      *  clear or the creation of the board. */
     int numMoves() {
-        return 0; // FIXME
+        return _allMoves.size();
     }
 
     /** Return number of non-pass moves made in the current game since the
      *  last extend move added a piece to the board (or since the
      *  start of the game). Used to detect end-of-game. */
     int numJumps() {
-        return 0;  // FIXME
+        return _numJumps;
     }
 
     /** Assuming MOVE has the format "-" or "C0R0-C1R1", make the denoted
@@ -215,7 +232,7 @@ class Board {
         _allMoves.add(move);
         startUndo();
         PieceColor opponent = _whoseMove.opposite();
-        // FIXME
+        // Fix me
         _whoseMove = opponent;
         announce();
     }
@@ -291,7 +308,7 @@ class Board {
     /** Return a list of all moves made since the last clear (or start of
      *  game). */
     List<Move> allMoves() {
-        return new ArrayList<Move>();  // FIXME
+        return _allMoves;
     }
 
     @Override
@@ -400,7 +417,7 @@ class Board {
 
     /** List of all (non-undone) moves since the last clear or beginning of
      *  the game. */
-    private ArrayList<Move> _allMoves;
+    private ArrayList<Move> _allMoves = new ArrayList<Move>();
 
     /* The undo stack. We keep a stack of squares that have changed and
      * their previous contents.  Any given move may involve several such
