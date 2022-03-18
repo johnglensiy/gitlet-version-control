@@ -280,7 +280,7 @@ class Board {
 
     /** Return true iff it is legal to place a block at C R. */
     boolean legalBlock(char c, char r) {
-        if (get(index(c, r)) == BLOCKED | get(index(c, r)) == EMPTY) {
+        if (numMoves() == 0 && get(index(c, r)) == EMPTY) {
             return true;
         } else {
             return false;
@@ -298,29 +298,31 @@ class Board {
      *  already occupied by a block.  It is an error to place a block on a
      *  piece. */
     void setBlock(char c, char r) {
-        double middleSquare = TOTAL_SQUARES / 2.0;
-        double distCentCol = abs(c - 'a' - (SIDE - 1) / 2.0);
-        double distCentRow = abs(r - '1' - (SIDE - 1) / 2.0);
+        int dCC = abs('d' - c);
+        int dCR = abs('4' - r);
         if (!legalBlock(c, r)) {
             throw error("illegal block placement");
         }
-        // F
-        if (!canMove(RED) && !canMove(BLUE)) {
-            _winner = EMPTY;
-        }
-        if (index(c, r) == Math.floor(middleSquare) && TOTAL_SQUARES % 2 == 1) {
+        if (dCC == 0 && dCR == 0) {
             unrecordedSet(c, r, BLOCKED);
             incrPieces(BLOCKED, 1);
-        } else {
-            unrecordedSet( (int) (middleSquare + distCentCol), BLOCKED);
-            unrecordedSet( (int) (middleSquare - distCentCol), BLOCKED);
-            unrecordedSet( (int) (middleSquare + EXTENDED_SIDE * distCentRow), BLOCKED);
-            unrecordedSet( (int) (middleSquare - EXTENDED_SIDE * distCentRow), BLOCKED);
-            for (int i = 1; i < TOTAL_SQUARES; i++) {
-                if (get(i) == BLOCKED) {
-                    System.out.println(i);
-                }
-            }
+        } else if (dCC > 0 && dCR == 0) {
+            unrecordedSet(c, (char) ('4' + dCR), BLOCKED);
+            unrecordedSet(c, (char) ('4' - dCR), BLOCKED);
+            incrPieces(BLOCKED, 2);
+        } else if (dCC == 0 && dCR > 0) {
+            unrecordedSet((char) ('d' + dCC), r, BLOCKED);
+            unrecordedSet((char) ('d' - dCC), r, BLOCKED);
+            incrPieces(BLOCKED, 2);
+        } else if (dCC > 0 && dCR > 0) {
+            unrecordedSet((char) ('d' + dCC),
+                    (char) ('4' + dCR), BLOCKED);
+            unrecordedSet((char) ('d' - dCC),
+                    (char) ('4' + dCR), BLOCKED);
+            unrecordedSet((char) ('d' + dCC),
+                    (char) ('4' - dCR), BLOCKED);
+            unrecordedSet((char) ('d' - dCC),
+                    (char) ('4' - dCR), BLOCKED);
             incrPieces(BLOCKED, 4);
         }
         announce();
