@@ -365,12 +365,14 @@ class Board {
             unrecordedSet(c, r, BLOCKED);
             incrPieces(BLOCKED, 1);
         } else if (dCC > 0 && dCR == 0) {
+            unrecordedSet((char) ('d' + dCC), r, BLOCKED);
+            unrecordedSet((char) ('d' - dCC), r, BLOCKED);
             unrecordedSet(c, (char) ('4' + dCR), BLOCKED);
             unrecordedSet(c, (char) ('4' - dCR), BLOCKED);
             incrPieces(BLOCKED, 2);
         } else if (dCC == 0 && dCR > 0) {
-            unrecordedSet((char) ('d' + dCC), r, BLOCKED);
-            unrecordedSet((char) ('d' - dCC), r, BLOCKED);
+            unrecordedSet(c, (char) ('4' + dCR), BLOCKED);
+            unrecordedSet(c, (char) ('4' - dCR), BLOCKED);
             incrPieces(BLOCKED, 2);
         } else if (dCC > 0 && dCR > 0) {
             unrecordedSet((char) ('d' + dCC),
