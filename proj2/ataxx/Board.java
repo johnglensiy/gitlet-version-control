@@ -56,6 +56,8 @@ class Board {
     /** A new, cleared board in the initial configuration. */
     Board() {
         _board = new PieceColor[TOTAL_SQUARES];
+        _undoSquares = new Stack<Integer>();
+        _undoPieces = new Stack<PieceColor>();
         for (int i = 0; i < TOTAL_SQUARES; i++) {
             unrecordedSet(i, BLOCKED);
         }
@@ -152,6 +154,7 @@ class Board {
     private void set(int sq, PieceColor v) {
         addUndo(sq);
         _board[sq] = v;
+        incrPieces(v, 1);
     }
 
     /** Set square at C R to V (not undoable). This is used for changing
@@ -187,7 +190,22 @@ class Board {
     /** Return true iff player WHO can move, ignoring whether it is
      *  that player's move and whether the game is over. */
     boolean canMove(PieceColor who) {
-        return true; // FIX ME
+        for (int i = 0; i < SIDE; i++) {
+            char ci = (char) ('a' + i);
+            for (int j = 0; j < SIDE; j++) {
+                char cj = (char) ('1' + j);
+                if (get(index(ci, cj)) == who) {
+                    for (int m = 1; m <= 2; m++) {
+                        for (int n = 1; n <= 2; n++) {
+                            if (get(neighbor(index(ci, cj), m, n)) == EMPTY) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /** Return the color of the player who has the next move.  The
@@ -242,7 +260,15 @@ class Board {
         _allMoves.add(move);
         startUndo();
         PieceColor opponent = _whoseMove.opposite();
-        //set()
+        System.out.println(move.isExtend());
+        System.out.println(move.isJump());
+        if (move.isExtend() == true) {
+            set(move.col1(), move.row1(), _whoseMove);
+        }
+        else if (move.isJump() == true) {
+            set(move.col0(), move.row0(), EMPTY);
+            set(move.col1(), move.row1(), _whoseMove);
+        }
         _whoseMove = opponent;
         announce();
     }
@@ -259,7 +285,10 @@ class Board {
 
     /** Undo the last move. */
     void undo() {
-        // FIXME
+        while (_undoSquares.peek() != null) {
+            _undoSquares.pop();
+            _undoPieces.pop();
+        }
         _whoseMove = _whoseMove.opposite();
         _allMoves.remove(_allMoves.size() - 1);
         _winner = null;
@@ -270,12 +299,13 @@ class Board {
      * _undoSquares and _undoPieces instance variable comments for
      * details on how the beginning of moves are marked. */
     private void startUndo() {
-        // FIXME
+        _undoSquares.push(null);
     }
 
     /** Add an undo action for changing SQ on current board. */
     private void addUndo(int sq) {
-        // FIXME
+        _undoSquares.push(sq);
+        _undoPieces.push(get(sq));
     }
 
     /** Return true iff it is legal to place a block at C R. */
