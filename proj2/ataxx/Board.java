@@ -69,6 +69,11 @@ class Board {
      *  undo history is clear, and whose notifier does nothing. */
     Board(Board board0) {
         _board = board0._board.clone();
+        _undoSquares = board0._undoSquares;
+        _undoPieces = board0._undoPieces;
+        _numJumps = board0._numJumps;
+        _numPieces = board0._numPieces.clone();
+        _whoseMove = board0._whoseMove;
         setNotifier(NOP);
     }
 
@@ -153,6 +158,7 @@ class Board {
      *  undoable. */
     private void set(int sq, PieceColor v) {
         addUndo(sq);
+        incrPieces(get(sq), -1);
         _board[sq] = v;
         incrPieces(v, 1);
     }
@@ -195,8 +201,8 @@ class Board {
             for (int j = 0; j < SIDE; j++) {
                 char cj = (char) ('1' + j);
                 if (get(index(ci, cj)) == who) {
-                    for (int m = 1; m <= 2; m++) {
-                        for (int n = 1; n <= 2; n++) {
+                    for (int m = -2; m <= 2; m++) {
+                        for (int n = -2; n <= 2; n++) {
                             if (get(neighbor(index(ci, cj), m, n)) == EMPTY) {
                                 return true;
                             }
@@ -260,14 +266,29 @@ class Board {
         _allMoves.add(move);
         startUndo();
         PieceColor opponent = _whoseMove.opposite();
-        System.out.println(move.isExtend());
-        System.out.println(move.isJump());
         if (move.isExtend() == true) {
             set(move.col1(), move.row1(), _whoseMove);
+            _numJumps = 0;
         }
         else if (move.isJump() == true) {
             set(move.col0(), move.row0(), EMPTY);
             set(move.col1(), move.row1(), _whoseMove);
+            _numJumps += 1;
+        }
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (get(neighbor(index(move.col1(), move.row1()), i, j))
+                        == opponent) {
+                    set((char) (move.col1() + i),
+                            (char) (move.row1() + j), _whoseMove);
+                }
+            }
+        }
+        if (numPieces(BLUE) == 0) {
+            _winner = RED;
+        }
+        else if (numPieces(RED) == 0) {
+            _winner = BLUE;
         }
         _whoseMove = opponent;
         announce();
@@ -277,7 +298,7 @@ class Board {
      *  is legal to do so. Passing is undoable. */
     void pass() {
         assert !canMove(_whoseMove);
-        // FIXME
+        //;
         startUndo();
         _whoseMove = _whoseMove.opposite();
         announce();
@@ -286,10 +307,17 @@ class Board {
     /** Undo the last move. */
     void undo() {
         while (_undoSquares.peek() != null) {
-            _undoSquares.pop();
-            _undoPieces.pop();
+            int undoSquare = _undoSquares.pop();
+            PieceColor undoPiece = _undoPieces.pop();
+            incrPieces(get(undoSquare), -1);
+            unrecordedSet(undoSquare, undoPiece);
+            incrPieces(undoPiece, 1);
         }
+        _undoSquares.pop();
         _whoseMove = _whoseMove.opposite();
+        if (_allMoves.get(_allMoves.size() - 1).isJump()) {
+            _numJumps -= 1;
+        }
         _allMoves.remove(_allMoves.size() - 1);
         _winner = null;
         announce();
