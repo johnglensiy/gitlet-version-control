@@ -286,9 +286,16 @@ class Board {
         }
         if (numPieces(BLUE) == 0) {
             _winner = RED;
-        }
-        else if (numPieces(RED) == 0) {
+        } else if (numPieces(RED) == 0) {
             _winner = BLUE;
+        } else if ((!canMove(BLUE) && !canMove(RED)) || numJumps() == 25) {
+            if (numPieces(BLUE) > numPieces(RED)) {
+                _winner = BLUE;
+            } else if (numPieces(RED) > numPieces(BLUE)) {
+                _winner = RED;
+            } else if (numPieces(RED) == numPieces(BLUE)) {
+                _winner = EMPTY;
+            }
         }
         _whoseMove = opponent;
         announce();
