@@ -19,17 +19,18 @@ public class BSTStringSet implements StringSet, Iterable<String> {
         Node toPut = new Node(s);
         if (_root == null) {
             _root = toPut;
-        }
-        Node from = _root;
-        Node to = _root;
-        while (to != null) {
-            from = to;
-            to = traverse(s, from);
-        }
-        if (s.compareTo(from.s) >= 0) {
-            from.right = toPut;
         } else {
-            from.left = toPut;
+            Node from = _root;
+            Node to = _root;
+            while (to != null) {
+                from = to;
+                to = traverse(s, from);
+            }
+            if (s.compareTo(from.s) >= 0) {
+                from.right = toPut;
+            } else {
+                from.left = toPut;
+            }
         }
 
 //        Node traverse = _root;
@@ -78,9 +79,12 @@ public class BSTStringSet implements StringSet, Iterable<String> {
 
     @Override
     public List<String> asList() {
-        //List<String> sorted = new List<String>[];
-        //BSTIterator asdf = new BSTIterator ()
-        return null;
+        BSTIterator iter = new BSTIterator(_root);
+        ArrayList<String> sorted = new ArrayList<String>();
+        while (iter.hasNext()) {
+            sorted.add(iter.next());
+        }
+        return sorted;
     }
 
 
