@@ -67,7 +67,7 @@ class AI extends Player {
         for (int i = 0; i < Board.SIDE; i++) {
             for (int j = 0; j < Board.SIDE; j++) {
                 for (int m = 0; m < Board.SIDE; m++) {
-                    for (int n = 0; m < Board.SIDE; n++) {
+                    for (int n = 0; n < Board.SIDE; n++) {
                         if (b.legalMove((char) (i + 'a'), (char) (j + '1'),
                                 (char) (m + 'a'), (char) (n + '1'))) {
                             legalMoves.add(Move.move((char) (i + 'a'), (char) (j + '1'),
@@ -77,9 +77,9 @@ class AI extends Player {
                 }
             }
         }
-        //_lastFoundMove =
-        //return _lastFoundMove;
-        return null;
+        _lastFoundMove = legalMoves.get((int) Math.floor(Math.random()*legalMoves.size()));
+        return _lastFoundMove;
+        //return null;
     }
 
     /** The move found by the last call to the findMove method
