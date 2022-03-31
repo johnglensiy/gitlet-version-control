@@ -10,8 +10,10 @@ import static ataxx.PieceColor.*;
 import static java.lang.Math.min;
 import static java.lang.Math.max;
 
+import java.util.ArrayList;
+
 /** A Player that computes its own moves.
- *  @author
+ *  @author John Glen Siy
  */
 class AI extends Player {
 
@@ -54,12 +56,30 @@ class AI extends Player {
     private Move findMove() {
         Board b = new Board(getBoard());
         _lastFoundMove = null;
+        ArrayList<Move> legalMoves = new ArrayList<Move>();
+        /*
         if (myColor() == RED) {
-            minMax(b, MAX_DEPTH, true, 1, -INFTY, INFTY);
+            //minMax(b, MAX_DEPTH, true, 1, -INFTY, INFTY);
         } else {
-            minMax(b, MAX_DEPTH, true, -1, -INFTY, INFTY);
+            //minMax(b, MAX_DEPTH, true, -1, -INFTY, INFTY);
         }
-        return _lastFoundMove;
+        */
+        for (int i = 0; i < Board.SIDE; i++) {
+            for (int j = 0; j < Board.SIDE; j++) {
+                for (int m = 0; m < Board.SIDE; m++) {
+                    for (int n = 0; m < Board.SIDE; n++) {
+                        if (b.legalMove((char) (i + 'a'), (char) (j + '1'),
+                                (char) (m + 'a'), (char) (n + '1'))) {
+                            legalMoves.add(Move.move((char) (i + 'a'), (char) (j + '1'),
+                                    (char) (m + 'a'), (char) (n + '1')));
+                        }
+                    }
+                }
+            }
+        }
+        //_lastFoundMove =
+        //return _lastFoundMove;
+        return null;
     }
 
     /** The move found by the last call to the findMove method
