@@ -69,7 +69,7 @@ class Board {
      *  undo history is clear, and whose notifier does nothing. */
     Board(Board board0) {
         _board = board0._board.clone();
-        _undoSquares = board0._undoSquares;
+        _undoSquares = new Stack<Integer>();
         _undoPieces = board0._undoPieces;
         _numJumps = board0._numJumps;
         _numPieces = board0._numPieces.clone();

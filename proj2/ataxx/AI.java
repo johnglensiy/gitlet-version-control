@@ -57,13 +57,12 @@ class AI extends Player {
         Board b = new Board(getBoard());
         _lastFoundMove = null;
         ArrayList<Move> legalMoves = new ArrayList<Move>();
-        /*
         if (myColor() == RED) {
-            //minMax(b, MAX_DEPTH, true, 1, -INFTY, INFTY);
+            minMax(b, MAX_DEPTH, true, 1, -INFTY, INFTY);
         } else {
-            //minMax(b, MAX_DEPTH, true, -1, -INFTY, INFTY);
+            minMax(b, MAX_DEPTH, true, -1, -INFTY, INFTY);
         }
-        */
+        /*
         for (int i = 0; i < Board.SIDE; i++) {
             for (int j = 0; j < Board.SIDE; j++) {
                 for (int m = 0; m < Board.SIDE; m++) {
@@ -77,7 +76,8 @@ class AI extends Player {
                 }
             }
         }
-        _lastFoundMove = legalMoves.get((int) Math.floor(Math.random()*legalMoves.size()));
+        */
+        //_lastFoundMove = legalMoves.get((int) Math.floor(Math.random()*legalMoves.size()));
         return _lastFoundMove;
         //return null;
     }
@@ -105,9 +105,50 @@ class AI extends Player {
         Move best;
         best = null;
         int bestScore;
-        bestScore = 0; // FIXME
+        if (sense == 1) {
+            bestScore = -INFTY;
+        } else {
+            bestScore = INFTY;
+        }
 
-        // FIXME
+        for (int ci = 0; ci < Board.SIDE; ci++) {
+            for (int ri = 0; ri < Board.SIDE; ri++) {
+                for (int i = -2; i <= 2; i++) {
+                    for (int j = -2; j <= 2; j++) {
+                        if (board.legalMove((char) (ci + 'a'), (char) (ri + '1'),
+                                (char) (ci + i + 'a'), (char) (ri + j + '1'))) {
+                            Board testBoard = new Board(board);
+                            Move testMove = Move.move((char) (ci + 'a'), (char) (ri + '1'),
+                                    (char) (ci + i + 'a'), (char) (ri + j + '1'));
+                            testBoard.makeMove(testMove);
+                            if (sense == 1) {
+                                int response = minMax(testBoard, depth - 1,
+                                        false, -1, alpha, beta);
+                                if (response > bestScore) {
+                                    bestScore = response;
+                                    best = testMove;
+                                    alpha = max(alpha, bestScore);
+                                    if (alpha >= beta) {
+                                        return bestScore;
+                                    }
+                                }
+                            } else {
+                                int response = minMax(testBoard, depth - 1,
+                                        false, 1, alpha, beta);
+                                if (response < bestScore) {
+                                    bestScore = response;
+                                    best = testMove;
+                                    beta = min(beta, bestScore);
+                                    if (alpha >= beta) {
+                                        return bestScore;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         if (saveMove) {
             _lastFoundMove = best;
@@ -127,7 +168,7 @@ class AI extends Player {
             };
         }
 
-        return 0; // FIXME
+        return board.numPieces(RED) - board.numPieces(BLUE);
     }
 
     /** Pseudo-random number generator for move computation. */
