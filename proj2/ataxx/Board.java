@@ -180,17 +180,11 @@ class Board {
         if (move == null) {
             return false;
         } else if (move.isPass()) {
-            if (!canMove(whoseMove())) {
-                return true;
-            } else {
-                return false;
-            }
+            return !canMove(whoseMove());
         } else if (get(index(move.col1(), move.row1())) != EMPTY) {
             return false;
-        } else if (get(index(move.col0(), move.row0())) != _whoseMove) {
-            return false;
         } else {
-            return true;
+            return !(get(index(move.col0(), move.row0())) != _whoseMove);
         }
     }
 
@@ -272,11 +266,10 @@ class Board {
         _allMoves.add(move);
         startUndo();
         PieceColor opponent = _whoseMove.opposite();
-        if (move.isExtend() == true) {
+        if (move.isExtend()) {
             set(move.col1(), move.row1(), _whoseMove);
             _numJumps = 0;
-        }
-        else if (move.isJump() == true) {
+        } else if (move.isJump()) {
             set(move.col0(), move.row0(), EMPTY);
             set(move.col1(), move.row1(), _whoseMove);
             _numJumps += 1;
@@ -294,7 +287,8 @@ class Board {
             _winner = RED;
         } else if (numPieces(RED) == 0) {
             _winner = BLUE;
-        } else if ((!canMove(BLUE) && !canMove(RED)) || numJumps() == 25) {
+        } else if ((!canMove(BLUE) && !canMove(RED))
+                || numJumps() == JUMP_LIMIT) {
             if (numPieces(BLUE) > numPieces(RED)) {
                 _winner = BLUE;
             } else if (numPieces(RED) > numPieces(BLUE)) {
@@ -311,7 +305,6 @@ class Board {
      *  is legal to do so. Passing is undoable. */
     void pass() {
         assert !canMove(_whoseMove);
-        //;
         startUndo();
         _whoseMove = _whoseMove.opposite();
         announce();
@@ -351,11 +344,7 @@ class Board {
 
     /** Return true iff it is legal to place a block at C R. */
     boolean legalBlock(char c, char r) {
-        if (numMoves() == 0 && get(index(c, r)) == EMPTY) {
-            return true;
-        } else {
-            return false;
-        }
+        return (numMoves() == 0 && get(index(c, r)) == EMPTY);
     }
 
     /** Return true iff it is legal to place a block at CR. */
@@ -431,7 +420,7 @@ class Board {
             return false;
         }
         Board other = (Board) obj;
-        return Arrays.equals(_board, other._board); // FIXME?
+        return Arrays.equals(_board, other._board);
     }
 
     @Override

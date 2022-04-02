@@ -62,24 +62,7 @@ class AI extends Player {
         } else {
             minMax(b, MAX_DEPTH, true, -1, -INFTY, INFTY);
         }
-        /*
-        for (int i = 0; i < Board.SIDE; i++) {
-            for (int j = 0; j < Board.SIDE; j++) {
-                for (int m = 0; m < Board.SIDE; m++) {
-                    for (int n = 0; n < Board.SIDE; n++) {
-                        if (b.legalMove((char) (i + 'a'), (char) (j + '1'),
-                                (char) (m + 'a'), (char) (n + '1'))) {
-                            legalMoves.add(Move.move((char) (i + 'a'), (char) (j + '1'),
-                                    (char) (m + 'a'), (char) (n + '1')));
-                        }
-                    }
-                }
-            }
-        }
-        */
-        //_lastFoundMove = legalMoves.get((int) Math.floor(Math.random()*legalMoves.size()));
         return _lastFoundMove;
-        //return null;
     }
 
     /** The move found by the last call to the findMove method
@@ -95,10 +78,6 @@ class AI extends Player {
      *  on BOARD, does not set _foundMove. */
     private int minMax(Board board, int depth, boolean saveMove, int sense,
                        int alpha, int beta) {
-        /* We use WINNING_VALUE + depth as the winning value so as to favor
-         * wins that happen sooner rather than later (depth is larger the
-         * fewer moves have been made. */
-
         if (depth == 0 || board.getWinner() != null) {
             return staticScore(board, WINNING_VALUE + depth);
         }
@@ -106,11 +85,7 @@ class AI extends Player {
         Move best;
         best = null;
         int bestScore;
-        if (sense == 1) {
-            bestScore = -WINNING_VALUE;
-        } else {
-            bestScore = WINNING_VALUE;
-        }
+        bestScore = -(sense * WINNING_VALUE);
         for (int i = 0; i < Board.SIDE; i++) {
             for (int j = 0; j < Board.SIDE; j++) {
                 for (int c = -2; c <= 2; c++) {

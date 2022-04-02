@@ -6,8 +6,6 @@ package ataxx;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 import static ataxx.PieceColor.*;
 import static org.junit.Assert.*;
 
