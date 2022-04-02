@@ -18,7 +18,7 @@ import java.util.ArrayList;
 class AI extends Player {
 
     /** Maximum minimax search depth before going to static evaluation. */
-    private static final int MAX_DEPTH = 2;
+    private static final int MAX_DEPTH = 3;
     /** A position magnitude indicating a win (for red if positive, blue
      *  if negative). */
     private static final int WINNING_VALUE = Integer.MAX_VALUE - 20;
@@ -115,10 +115,14 @@ class AI extends Player {
             for (int j = 0; j < Board.SIDE; j++) {
                 for (int c = -2; c <= 2; c++) {
                     for (int d = -2; d <= 2; d++) {
-                        if (board.legalMove((char) (i + 'a'), (char) (j + '1'),
-                                (char) (i + c + 'a'), (char) (j + d + '1'))) {
-                            legalMoves.add(Move.move((char) (i + 'a'), (char) (j + '1'),
-                                    (char) (i + c + 'a'), (char) (j + d + '1')));
+                        if (board.legalMove((char) (i + 'a'),
+                                (char) (j + '1'),
+                                (char) (i + c + 'a'),
+                                (char) (j + d + '1'))) {
+                            legalMoves.add(Move.move((char) (i + 'a'),
+                                    (char) (j + '1'),
+                                    (char) (i + c + 'a'),
+                                    (char) (j + d + '1')));
                         }
                     }
                 }
@@ -152,51 +156,6 @@ class AI extends Player {
                 }
             }
         }
-        /*
-        for (int ci = 0; ci < Board.SIDE; ci++) {
-            for (int ri = 0; ri < Board.SIDE; ri++) {
-                for (int i = -2; i <= 2; i++) {
-                    for (int j = -2; j <= 2; j++) {
-                        if (board.legalMove((char) (ci + 'a'), (char) (ri + '1'),
-                                (char) (ci + i + 'a'), (char) (ri + j + '1'))) {
-                            Board testBoard = new Board(board);
-                            Move testMove = Move.move((char) (ci + 'a'), (char) (ri + '1'),
-                                    (char) (ci + i + 'a'), (char) (ri + j + '1'));
-                            testBoard.makeMove(testMove);
-                            if (sense == 1) {
-                                int response = minMax(testBoard, depth - 1,
-                                        false, -1, alpha, beta);
-                                if (response > bestScore) {
-                                    bestScore = response;
-                                    best = testMove;
-                                    alpha = max(alpha, bestScore);
-                                    if (alpha >= beta) {
-                                        return bestScore;
-                                    }
-                                }
-                            } else {
-                                int response = minMax(testBoard, depth - 1,
-                                        false, 1, alpha, beta);
-                                if (response < bestScore) {
-                                    bestScore = response;
-                                    best = testMove;
-                                    beta = min(beta, bestScore);
-                                    if (alpha >= beta) {
-                                        return bestScore;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (saveMove) {
-            _lastFoundMove = best;
-        }
-        return bestScore;
-         */
         if (saveMove) {
             _lastFoundMove = best;
         }

@@ -189,8 +189,7 @@ class Board {
             return false;
         } else if (get(index(move.col0(), move.row0())) != _whoseMove) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
