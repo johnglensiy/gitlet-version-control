@@ -18,7 +18,7 @@ import java.util.ArrayList;
 class AI extends Player {
 
     /** Maximum minimax search depth before going to static evaluation. */
-    private static final int MAX_DEPTH = 3;
+    private static final int MAX_DEPTH = 2;
     /** A position magnitude indicating a win (for red if positive, blue
      *  if negative). */
     private static final int WINNING_VALUE = Integer.MAX_VALUE - 20;
@@ -123,6 +123,9 @@ class AI extends Player {
                     }
                 }
             }
+        }
+        if (!board.canMove(myColor())) {
+            legalMoves.add(Move.PASS);
         }
         for (int i = 0; i < legalMoves.size(); i++) {
             Board testBoard = new Board(board);
