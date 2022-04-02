@@ -185,8 +185,7 @@ class Board {
             } else {
                 return false;
             }
-        }
-        else if (get(index(move.col1(), move.row1())) != EMPTY) {
+        } else if (get(index(move.col1(), move.row1())) != EMPTY) {
             return false;
         } else if (get(index(move.col0(), move.row0())) != _whoseMove) {
             return false;
@@ -399,6 +398,9 @@ class Board {
             unrecordedSet((char) ('d' - dCC),
                     (char) ('4' - dCR), BLOCKED);
             incrPieces(BLOCKED, 4);
+        }
+        if (!canMove(RED) && !canMove(BLUE)) {
+            _winner = EMPTY;
         }
         announce();
     }
