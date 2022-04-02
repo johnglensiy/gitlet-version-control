@@ -18,7 +18,7 @@ import java.util.ArrayList;
 class AI extends Player {
 
     /** Maximum minimax search depth before going to static evaluation. */
-    private static final int MAX_DEPTH = 2;
+    private static final int MAX_DEPTH = 3;
     /** A position magnitude indicating a win (for red if positive, blue
      *  if negative). */
     private static final int WINNING_VALUE = Integer.MAX_VALUE - 20;
@@ -107,9 +107,9 @@ class AI extends Player {
         best = null;
         int bestScore;
         if (sense == 1) {
-            bestScore = -INFTY;
+            bestScore = -WINNING_VALUE;
         } else {
-            bestScore = INFTY;
+            bestScore = WINNING_VALUE;
         }
         for (int i = 0; i < Board.SIDE; i++) {
             for (int j = 0; j < Board.SIDE; j++) {
@@ -124,9 +124,6 @@ class AI extends Player {
                 }
             }
         }
-        if (!board.canMove(myColor())) {
-            legalMoves.add(Move.PASS);
-        }
         for (int i = 0; i < legalMoves.size(); i++) {
             Board testBoard = new Board(board);
             Move testMove = legalMoves.get(i);
@@ -134,7 +131,7 @@ class AI extends Player {
             if (sense == 1) {
                 int response = minMax(testBoard, depth - 1,
                         false, -1, alpha, beta);
-                if (response > bestScore) {
+                if (response > bestScore || best == null) {
                     bestScore = response;
                     best = testMove;
                     alpha = max(alpha, bestScore);
@@ -145,7 +142,7 @@ class AI extends Player {
             } else {
                 int response = minMax(testBoard, depth - 1,
                         false, 1, alpha, beta);
-                if (response < bestScore) {
+                if (response < bestScore || best == null) {
                     bestScore = response;
                     best = testMove;
                     beta = min(beta, bestScore);

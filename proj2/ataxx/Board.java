@@ -179,11 +179,19 @@ class Board {
     boolean legalMove(Move move) {
         if (move == null) {
             return false;
-        } else if (get(index(move.col1(), move.row1())) == BLOCKED) {
+        } else if (move.isPass()) {
+            if (!canMove(whoseMove())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if (get(index(move.col1(), move.row1())) != EMPTY) {
             return false;
         } else if (get(index(move.col0(), move.row0())) != _whoseMove) {
             return false;
-        } else {
+        }
+        else {
             return true;
         }
     }
