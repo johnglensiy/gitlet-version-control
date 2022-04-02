@@ -70,7 +70,7 @@ class Board {
     Board(Board board0) {
         _board = board0._board.clone();
         _undoSquares = new Stack<Integer>();
-        _undoPieces = board0._undoPieces;
+        _undoPieces = new Stack<PieceColor>();
         _numJumps = board0._numJumps;
         _numPieces = board0._numPieces.clone();
         _whoseMove = board0._whoseMove;
