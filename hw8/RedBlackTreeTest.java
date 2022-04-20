@@ -88,6 +88,13 @@ public class RedBlackTreeTest {
         Collections.shuffle(itemsList, new Random(seed));
         for (Integer item : itemsList) {
             tree.insert(item);
+            System.out.println(tree.graderRoot().item);
+            if (tree.graderRoot().left != null) {
+                System.out.println(tree.graderRoot().left.item);
+            }
+            if (tree.graderRoot().right != null) {
+                System.out.println(tree.graderRoot().right.item);
+            }
         }
         checkTree(tree.graderRoot(), items);
     }

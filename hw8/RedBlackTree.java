@@ -1,6 +1,6 @@
 /**
  * Simple Red-Black tree implementation, where the keys are of type T.
- @author
+ @author John Glen Siy
  */
 public class RedBlackTree<T extends Comparable<T>> {
 
@@ -45,8 +45,16 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return new root of the (sub)tree.
      */
     RBTreeNode<T> rotateRight(RBTreeNode<T> node) {
-        // YOUR CODE HERE
-        return null;
+//        if (node.left == null) {
+//            return node;
+//        }
+        boolean baseColor = node.isBlack;
+        RBTreeNode<T> wasLeft = node.left;
+        node.left = wasLeft.right;
+        wasLeft.right = node;
+        wasLeft.isBlack = baseColor;
+        node.isBlack = !node.isBlack;
+        return wasLeft;
     }
 
     /**
@@ -58,8 +66,16 @@ public class RedBlackTree<T extends Comparable<T>> {
      * @return new root of the (sub)tree.
      */
     RBTreeNode<T> rotateLeft(RBTreeNode<T> node) {
-        // YOUR CODE HERE
-        return null;
+//        if (node.right == null) {
+//            return node;
+//        }
+        boolean baseColor = node.isBlack;
+        RBTreeNode<T> wasRight = node.right;
+        node.right = wasRight.left;
+        wasRight.left = node;
+        wasRight.isBlack = baseColor;
+        node.isBlack = !node.isBlack;
+        return wasRight;
     }
 
     /**
@@ -108,8 +124,7 @@ public class RedBlackTree<T extends Comparable<T>> {
 
         // Insert (return) new red leaf node.
         if (node == null) {
-            // YOUR CODE HERE
-
+            return new RBTreeNode<T>(false, item);
         }
 
         // Handle normal binary search tree insertion.
@@ -117,29 +132,24 @@ public class RedBlackTree<T extends Comparable<T>> {
         if (comp == 0) {
             return node; // do nothing.
         } else if (comp < 0) {
-            // YOUR CODE HERE
-
+            node.left = insert(node.left, item);
         } else {
-            // YOUR CODE HERE
-
+            node.right = insert(node.right, item);
         }
 
         // handle case C and "Right-leaning" situation.
         if (isRed(node.right) && !isRed(node.left)) {
-            // YOUR CODE HERE
-
+           node = rotateLeft(node);
         }
 
-        // handle case B
+        // handle case B (above handles red rights)
         if (isRed(node.left) && isRed(node.left.left)) {
-            // YOUR CODE HERE
-
+            node = rotateRight(node);
         }
 
         // handle case A
         if (isRed(node.left) && isRed(node.right)) {
-            // YOUR CODE HERE
-
+            flipColors(node);
         }
         return node;
     }
